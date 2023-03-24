@@ -1,14 +1,14 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 export const requestSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   subscriptionPlanId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "SubscriptionPlan",
+    ref: 'SubscriptionPlan',
     required: true,
   },
   timestamp: {
@@ -19,6 +19,6 @@ export const requestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-});
+})
 
-export default mongoose.model("Request", requestSchema);
+export default mongoose.model('Request', requestSchema)

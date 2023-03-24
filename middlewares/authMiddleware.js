@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken'
 
-import User from "../models/user.js";
+import User from '../models/user.js'
 
 /**
  * @description Middleware to authenticate the user
@@ -12,32 +12,32 @@ import User from "../models/user.js";
 const authMiddleware = async (req, res, next) => {
   try {
     // Get the JWT token from the request header
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization.split(' ')[1]
 
     if (!token) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: 'Unauthorized' })
     }
 
     // Verify the JWT token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
     // Find the user associated with the JWT token
     const user = await User.findById(decoded.userId, {
       password: 0,
       apiKeys: 0,
       __v: 0,
-    }).populate("subscription");
+    }).populate('subscription', { __v: 0 })
 
     // Add the user object to the request object
-    req.user = user;
+    req.user = user
 
     // Call the next middleware
-    next();
+    next()
   } catch (error) {
     // Handle any errors that occur
-    console.error(error);
-    res.status(401).json({ error: "Unauthorized" });
+    console.error(error)
+    res.status(401).json({ error: 'Unauthorized' })
   }
-};
+}
 
-export default authMiddleware;
+export default authMiddleware

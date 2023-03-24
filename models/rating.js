@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { nanoid } from "nanoid";
+import mongoose from 'mongoose'
+import { nanoid } from 'nanoid'
 
 export const ratingSchema = new mongoose.Schema({
   ratingId: {
@@ -7,10 +7,10 @@ export const ratingSchema = new mongoose.Schema({
     default: () => nanoid(10),
     unique: true,
   },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   score: { type: Number, required: true },
   feedback: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
-});
+})
 
-export default mongoose.model("Rating", ratingSchema);
+export default mongoose.model('Rating', ratingSchema)

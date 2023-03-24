@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 export const subscriptionPlanSchema = new mongoose.Schema({
   name: {
@@ -30,6 +30,6 @@ export const subscriptionPlanSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+})
 
-export default mongoose.model("SubscriptionPlan", subscriptionPlanSchema);
+export default mongoose.model('SubscriptionPlan', subscriptionPlanSchema)

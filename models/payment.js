@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { nanoid } from "nanoid";
+import mongoose from 'mongoose'
+import { nanoid } from 'nanoid'
 
 export const paymentSchema = new mongoose.Schema({
   paymentId: {
@@ -9,12 +9,12 @@ export const paymentSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   subscription: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Subscription",
+    ref: 'Subscription',
     required: true,
   },
   amount: {
@@ -27,9 +27,9 @@ export const paymentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "processing", "paid", "refunded", "failed"],
+    enum: ['pending', 'processing', 'paid', 'refunded', 'failed'],
     required: true,
   },
-});
+})
 
-export default mongoose.model("Payment", paymentSchema);
+export default mongoose.model('Payment', paymentSchema)

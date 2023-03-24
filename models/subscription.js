@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { nanoid } from "nanoid";
+import mongoose from 'mongoose'
+import { nanoid } from 'nanoid'
 
 export const subscriptionSchema = new mongoose.Schema({
   subscriptionId: {
@@ -9,12 +9,12 @@ export const subscriptionSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   plan: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "SubscriptionPlan",
+    ref: 'SubscriptionPlan',
     required: true,
   },
   startDate: {
@@ -27,7 +27,7 @@ export const subscriptionSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["active", "cancelled", "suspended", "expired"],
+    enum: ['active', 'cancelled', 'suspended', 'expired'],
     required: true,
   },
   maxRequestsPerDay: {
@@ -44,9 +44,9 @@ export const subscriptionSchema = new mongoose.Schema({
   paymentHistory: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Payment",
+      ref: 'Payment',
     },
   ],
-});
+})
 
-export default mongoose.model("Subscription", subscriptionSchema);
+export default mongoose.model('Subscription', subscriptionSchema)

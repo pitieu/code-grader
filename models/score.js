@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 export const scoreSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   code: {
@@ -19,6 +19,6 @@ export const scoreSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+})
 
-export default mongoose.model("Score", scoreSchema);
+export default mongoose.model('Score', scoreSchema)

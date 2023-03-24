@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { nanoid } from "nanoid";
+import mongoose from 'mongoose'
+import { nanoid } from 'nanoid'
 
 export const userSchema = new mongoose.Schema({
   userId: {
@@ -16,21 +16,16 @@ export const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // defines current subscription
   subscription: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Subscription",
+    ref: 'Subscription',
     required: false,
   },
-  apiKeys: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "ApiKey",
-    },
-  ],
   isAdmin: {
     type: Boolean,
     default: false,
   },
-});
+})
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model('User', userSchema)
