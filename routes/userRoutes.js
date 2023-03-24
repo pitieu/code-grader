@@ -18,7 +18,11 @@ router.post('/login', userController.login)
 // api keys
 router.get('/api-keys', authMiddleware, userController.getApiKeys)
 router.post('/api-keys', authMiddleware, userController.createApiKey)
-router.delete('/api-keys/:id', authMiddleware, userController.deleteApiKey)
+router.delete(
+  '/api-keys/:apiKeyId',
+  authMiddleware,
+  userController.deleteApiKey,
+)
 
 // subscriptions
 router.post('/subscribe', authMiddleware, userController.subscribe)

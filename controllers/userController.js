@@ -209,7 +209,7 @@ export const getApiKeys = async (req, res) => {
   try {
     const apiKeys = await ApiKey.find(
       { user: req.user._id },
-      { key: 1, _id: 0 },
+      { key: 1, _id: 0, apiKeyId: 1 },
     )
     res.status(200).json({ apiKeys })
   } catch (error) {
@@ -237,18 +237,21 @@ export const createApiKey = async (req, res) => {
 
 export const deleteApiKey = async (req, res) => {
   try {
-    const apiKey = await ApiKey.findOne({
-      apiKeyId: req.params.apiKeyId,
-      user: req.userId,
-    })
-    if (!apiKey) {
-      return res.status(404).json({ message: 'API key not found' })
+    if (!req.params.apiKeyId) {
+      return res.status(400).json({ message: 'API key ID is required' })
     }
+    const apiKey = await ApiKey.deleteOne({
+      apiKeyId: req.params.apiKeyId,
+      user: req.user._id,
+    })
 
-    await apiKey.remove()
-
-    res.status(200).json({ message: 'API key deleted' })
+    if (apiKey.deletedCount === 0) {
+      return res.status(404).json({ message: 'API key not found' })
+    } else {
+      res.status(200).json({ message: 'API key deleted' })
+    }
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: 'Internal server error' })
   }
 }
