@@ -22,10 +22,11 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Find the user associated with the JWT token
-    const user = await User.findById(decoded.userId, { password: 0 }).populate(
-      "subscription"
-    );
-    console.log(user);
+    const user = await User.findById(decoded.userId, {
+      password: 0,
+      apiKeys: 0,
+      __v: 0,
+    }).populate("subscription");
 
     // Add the user object to the request object
     req.user = user;

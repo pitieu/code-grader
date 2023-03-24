@@ -204,7 +204,10 @@ export const login = async (req, res) => {
 
 export const getApiKeys = async (req, res) => {
   try {
-    const apiKeys = await ApiKey.find({ user: req.user._id }, { key: 1 });
+    const apiKeys = await ApiKey.find(
+      { user: req.user._id },
+      { key: 1, _id: 0 }
+    );
     res.status(200).json({ apiKeys });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
@@ -218,7 +221,13 @@ export const createApiKey = async (req, res) => {
 
     await apiKey.save();
 
-    res.status(201).json({ message: "API key created", apiKey: apiKey.key });
+    res
+      .status(201)
+      .json({
+        message: "API key created",
+        apiKey: apiKey.key,
+        apiKeyId: apiKey.apiKeyId,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -228,7 +237,7 @@ export const createApiKey = async (req, res) => {
 export const deleteApiKey = async (req, res) => {
   try {
     const apiKey = await ApiKey.findOne({
-      _id: req.params.id,
+      apiKeyId: req.params.apiKeyId,
       user: req.userId,
     });
     if (!apiKey) {
