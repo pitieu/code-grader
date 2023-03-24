@@ -144,6 +144,9 @@ export const register = async (req, res) => {
     });
     await subscription.save();
 
+    user.subscription = subscription._id;
+    await user.save();
+
     // login user right after registration
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -221,13 +224,11 @@ export const createApiKey = async (req, res) => {
 
     await apiKey.save();
 
-    res
-      .status(201)
-      .json({
-        message: "API key created",
-        apiKey: apiKey.key,
-        apiKeyId: apiKey.apiKeyId,
-      });
+    res.status(201).json({
+      message: "API key created",
+      apiKey: apiKey.key,
+      apiKeyId: apiKey.apiKeyId,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
