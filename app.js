@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
+import bodyParser from 'body-parser'
 
 import userRoutes from './routes/userRoutes.js'
 import ratingRoutes from './routes/ratingRoutes.js'
@@ -11,11 +12,13 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const app = express()
+
+app.use(bodyParser.text({ type: 'text/plain' }))
 app.use(express.json())
 app.use(cors())
 
 app.use('/api/v1/users', userRoutes)
-// app.use("/api/v1/ratings", ratingRoutes);
+app.use('/api/v1/ratings', ratingRoutes)
 // app.use("/api/v1/subscriptions", subscriptionRoutes);
 
 mongoose

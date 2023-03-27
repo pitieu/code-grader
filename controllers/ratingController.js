@@ -1,27 +1,49 @@
 import Score from '../models/score.js'
+import { openai } from '../config.js'
 
 export const rateSourceCode = async (req, res) => {
   try {
-    const { code } = req.body
+    const code = req.body
     if (!code) {
       return res.status(400).json({ message: 'Code is required' })
     }
+    // const scores = await analyzeCode(code)
 
-    const scores = await analyzeCode(code)
+    const scoreDocumentation = await analyzeDocumentationCode(code)
+    // const scoreEntry = new Score({
+    //   user: req.user._id,
+    //   code,
+    //   scores,
+    // })
 
-    const scoreEntry = new Score({
-      user: req.user._id,
-      code,
-      scores,
-    })
+    // await scoreEntry.save()
 
-    await scoreEntry.save()
-
-    res.status(200).json({ scores })
+    res.status(200).json({ scoreDocumentation })
   } catch (error) {
-    console.error(error)
+    console.error(error.response)
     res.status(500).json({ message: 'Internal server error' })
   }
+}
+
+async function analyzeDocumentationCode(code) {
+  // console.log(code)
+  const prompt = `Provide individual scores from 1 to 5 for the following code based on these criteria, explain the score:\n
+    - Documentation (comments, consistency, clarity, function and class descriptions, etc.)\n
+    - Error Messages (consistency, clarity, etc.) \n
+    - Naming (variables, functions, classes, etc.) \n
+    \n Code:\n${code}\nAnswer should be in the following format, one entry per line and all criteria must be there once except explanation. Example of format:\Documentation: 3\nExplanation: Could add more comments\n`
+
+  const response = await openai.createCompletion({
+    model: 'text-davinci-003',
+    prompt: prompt,
+    temperature: 0.5,
+    max_tokens: 3000,
+  })
+  const text = response.data.choices[0].text.trim()
+  const scoreLines = text.split('\n')
+  console.log(scoreLines)
+  const scores = parseOpenAiChoices(scoreLines)
+  return scores
 }
 
 async function analyzeCode(code) {
@@ -34,34 +56,33 @@ async function analyzeCode(code) {
     - Version Control and Collaboration
     - Performance Optimisation
     - Security
-    - Problem Solving and Debugging\n\nCode:\n${code}`
+    - Problem Solving and Debugging\n\nCode:\n${code}\n`
 
-  const response = await axios.post(
-    'https://api.openai.com/v1/engines/davinci-codex/completions',
-    {
-      prompt: prompt,
-      max_tokens: 200,
-      n: 1,
-      stop: null,
-      temperature: 0.5,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${CHAT_GPT_KEY}`,
-      },
-    },
-  )
+  const response = await openai.createCompletion({
+    model: 'text-davinci-003',
+    prompt: prompt,
+    temperature: 0.5,
+    // presencePenalty: 0,
+    // frequencyPenalty: 0,
+    n: 1,
+    stream: false,
+    // stop: null,
+  })
+  console.log(response.data)
 
   const text = response.data.choices[0].text.trim()
   const scoreLines = text.split('\n')
+  const scores = parseOpenAiChoices(scoreLines)
+
+  return scores
+}
+
+const parseOpenAiChoices = (choices) => {
   const scores = {}
-
-  for (const line of scoreLines) {
-    const [criterion, score] = line.split(':')
-    scores[criterion.trim()] = parseInt(score.trim())
+  for (const choice of choices) {
+    const [criterion, score] = choice.split(':')
+    scores[criterion.trim()] = score.trim()
   }
-
   return scores
 }
 
